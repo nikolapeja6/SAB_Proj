@@ -29,3 +29,6 @@ hs_err_pid*
 .metadata*
 RemoteSystemsTempFiles*
 
+# include the erwin data modeler files 
+!*.erwin
+!*.png
