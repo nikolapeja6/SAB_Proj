@@ -8,11 +8,11 @@ import tests.TestRunner;
 public class StudentMain {
 
     public static void main(String[] args) {
-        CityOperations cityOperations = null; // Change this to your implementation.
+        CityOperations cityOperations = new pn140041_CityOperations();
         DistrictOperations districtOperations = null; // Do it for all classes.
         CourierOperations courierOperations = null; // e.g. = new MyDistrictOperations();
         CourierRequestOperation courierRequestOperation = null;
-        GeneralOperations generalOperations = null;
+        GeneralOperations generalOperations = new pn140041_GeneralOperations();
         UserOperations userOperations = null;
         VehicleOperations vehicleOperations = null;
         PackageOperations packageOperations = null;
