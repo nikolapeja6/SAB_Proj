@@ -9,11 +9,11 @@ public class StudentMain {
 
     public static void main(String[] args) {
         CityOperations cityOperations = new pn140041_CityOperations();
-        DistrictOperations districtOperations = null; // Do it for all classes.
+        DistrictOperations districtOperations = new pn140041_DistrictOperations(); // Do it for all classes.
         CourierOperations courierOperations = null; // e.g. = new MyDistrictOperations();
         CourierRequestOperation courierRequestOperation = null;
         GeneralOperations generalOperations = new pn140041_GeneralOperations();
-        UserOperations userOperations = null;
+        UserOperations userOperations = new pn140041_UserOperations();
         VehicleOperations vehicleOperations = null;
         PackageOperations packageOperations = null;
 

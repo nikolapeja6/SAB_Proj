@@ -65,17 +65,10 @@ public class SpExecutor {
 	public static List<Integer> ExecuteGetAllCities(){
 		
 		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllCities", OutputParameters.String);
-		List<Integer> id = new LinkedList<>();
 		
-		String idsAgregated = (String)returnValues.get(1);
-		if(idsAgregated == null || idsAgregated.isEmpty())
-			return id;
+		String agregatedIds = (String)returnValues.get(1);
 		
-		String[] idsStrings = idsAgregated.split(",");
-		for(String idString : idsStrings)
-			id.add(Integer.parseInt(idString));
-		
-		return id;
+		return splitStringIntoIds(agregatedIds);
 	}
 	
 	/**
@@ -114,6 +107,208 @@ public class SpExecutor {
 		}
 		
 		return id;
+	}
+	
+	/**
+	 * Executed the spDeleteAllDistrictsFromCityName stored procedure.
+	 * 
+	 * @param cityName
+	 * @return
+	 */
+	public static int ExecuteDeleteAllDistrictsFromCityName(String cityName){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteAllDistrictsFromCityName", cityName, OutputParameters.Integer, OutputParameters.String);
+		
+		int id = (Integer)returnValues.get(2);
+		if(id == -1){
+			String message = (String)returnValues.get(3);
+			Logger.Log(message);
+		}
+		
+		return id;
+	}
+	
+	/**
+	 * Executed the spDeleteDistrictId stored procedure.
+	 * 
+	 * @param districtId 
+	 * @return
+	 */
+	public static boolean ExecuteDeleteDistrictId(int districtId){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteDistrictId", districtId, OutputParameters.Boolean, OutputParameters.String);
+		
+		boolean status = (Boolean)returnValues.get(2);
+		if(!status){
+			String message = (String)returnValues.get(3);
+			Logger.Log(message);
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Executed the spDeleteDistrictName stored procedure.
+
+	 * @param districtName
+	 * @return
+	 */
+	public static boolean ExecuteDeleteDistrictName(String districtName){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteDistrictName", districtName, OutputParameters.Boolean, OutputParameters.String);
+		
+		boolean status = (Boolean)returnValues.get(2);
+		if(!status){
+			String message = (String)returnValues.get(3);
+			Logger.Log(message);
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Executed the spGetAllDistricts stored procedure.
+	 * 
+	 * @param districtName
+	 * @return
+	 */
+	public static List<Integer> ExecuteGetAllDistricts(){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllDistricts", OutputParameters.String);
+		
+		String agregatedIds = (String)returnValues.get(1);
+		
+		return splitStringIntoIds(agregatedIds);
+	}
+	
+	/**
+	 * Executed the spGetAllDistrictFromCity stored procedure.
+	 * 
+	 * @param cityId
+	 * @return
+	 */
+	public static List<Integer> ExecuteGetAllDistrictFromCity(int cityId){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllDistrictFromCity", cityId, OutputParameters.String, OutputParameters.String);
+		
+		String agregatedIds = (String)returnValues.get(2);
+		
+		String message = (String)returnValues.get(3);
+		if(message != null && !message.isEmpty()){
+			Logger.Log(message);
+		}
+		
+		return splitStringIntoIds(agregatedIds);
+	}
+	
+	/**
+	 * Executed the spInsertDistrict stored procedure.
+	 * 
+	 * @param districtName
+	 * @param idCity
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public static int ExecuteInsertDistrict(String districtName, int idCity, int x, int y){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertDistrict", districtName, idCity, x, y, OutputParameters.Integer, OutputParameters.String);
+		
+		int id = (Integer)returnValues.get(5);
+		
+		String message = (String)returnValues.get(6);
+		if(id == -1 || (message != null && !message.isEmpty())){
+			Logger.Log(message);
+		}
+		
+		return id;
+	}
+	
+	/**
+	 * Executed the spInsertUser stored procedure.
+	 * 
+	 * @param username
+	 * @param firstName
+	 * @param lastName
+	 * @param password
+	 * @return
+	 */
+	public static boolean ExecuteInsertUser(String username, String firstName, String lastName, String password){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertUser", username, firstName, lastName, password, OutputParameters.Boolean, OutputParameters.String);
+		
+		boolean status = (Boolean)returnValues.get(5);
+		
+		String message = (String)returnValues.get(6);
+		if(!status || (message != null && !message.isEmpty())){
+			Logger.Log(message);
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Executed the spGetAllUsers stored procedure.
+	 * 
+	 * @return
+	 */
+	public static List<String> ExecuteGetAllUsers(){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllUsers", OutputParameters.String);
+		
+		String agregatedUsernames = (String)returnValues.get(1);
+		
+		return splitStringIntoUsernames(agregatedUsernames);
+	}
+	
+	/**
+	 * Executed the spDeleteUser stored procedure.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public static boolean ExecuteDeleteUser(String username){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteUser", username, OutputParameters.Boolean, OutputParameters.String);
+		
+		boolean status = (Boolean)returnValues.get(2);
+		
+		String message = (String)returnValues.get(3);
+		if(!status || (message != null && !message.isEmpty())){
+			Logger.Log(message);
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Executed the spDeclareAdmin stored procedure.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public static int ExecuteDeclareAdmin(String username){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeclareAdmin", username, OutputParameters.Integer, OutputParameters.String);
+		
+		int status = (Integer)returnValues.get(2);
+		
+		String message = (String)returnValues.get(3);
+		if(status != 0 || (message != null && !message.isEmpty())){
+			Logger.Log(message);
+		}
+		
+		return status;
+	}
+	
+	/**
+	 * Executed the spGetSentPackages stored procedure.
+	 * 
+	 * @param username
+	 * @return
+	 */
+	public static Integer ExecuteGetSentPackages(String username){
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetSentPackages", username, OutputParameters.Integer, OutputParameters.String);
+		
+		Integer ret = (Integer)returnValues.get(2);
+		
+		String message = (String)returnValues.get(3);
+		if(ret == null || ret < 0 || (message != null && !message.isEmpty())){
+			ret = null;
+			Logger.Log(message);
+		}
+		
+		return ret;	
 	}
 	
 	/**
@@ -277,6 +472,45 @@ public class SpExecutor {
 		}
 		
 		return outputParameters;
+	}
+	
+	/**
+	 * Splits the string containing comma separated ids into a list.
+	 * @param agregatedIds
+	 * @return
+	 */
+	private static List<Integer> splitStringIntoIds(String agregatedIds){
+		
+		LinkedList<Integer> id = new LinkedList<>();
+		
+		if(agregatedIds == null || agregatedIds.isEmpty())
+			return id;
+		
+		String[] idsStrings = agregatedIds.split(",");
+		for(String idString : idsStrings)
+			id.add(Integer.parseInt(idString));
+		
+		return id;
+	}
+	
+	/**
+	 * Splits the string containing comma separated usernames into a list.
+	 * 
+	 * @param agregatedUsernames
+	 * @return
+	 */
+	private static List<String> splitStringIntoUsernames(String agregatedUsernames){
+		LinkedList<String> usernames = new LinkedList<>();
+		
+		if(agregatedUsernames == null || agregatedUsernames.isEmpty())
+			return usernames;
+		
+		String[] idsUsernames = agregatedUsernames.split(",");
+		
+		for(String idString : idsUsernames)
+			usernames.add(idString);
+		
+		return usernames;
 	}
 
 	//////////////////////////////////////
