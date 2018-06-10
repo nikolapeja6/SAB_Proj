@@ -28,7 +28,9 @@ hs_err_pid*
 # ignore eclipse specific files
 .metadata*
 RemoteSystemsTempFiles*
+.recommenders*
 
 # include the erwin data modeler files 
 !*.erwin
 !*.png
+SAB_Proj/log.txt
