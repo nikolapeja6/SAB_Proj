@@ -4,37 +4,37 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import operations.VehicleOperations;
+import student.helper.SpExecutor;
 
 public class pn140041_VehicleOperations implements VehicleOperations {
 
 	@Override
 	public boolean changeConsumption(String arg0, BigDecimal arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return SpExecutor.ExecuteChangeFuelConsumption(arg0, arg1);
 	}
 
 	@Override
 	public boolean changeFuelType(String arg0, int arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return SpExecutor.ExecuteChangeFuelType(arg0, arg1);
 	}
 
 	@Override
 	public int deleteVehicles(String... arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+		int cnt = 0;
+		for(String licence : arg0)
+			if(SpExecutor.ExecuteDeleteVehicle(licence))
+				cnt++;
+		return cnt;
 	}
 
 	@Override
 	public List<String> getAllVehichles() {
-		// TODO Auto-generated method stub
-		return null;
+		return SpExecutor.ExecuteGetAllVehicles();
 	}
 
 	@Override
 	public boolean insertVehicle(String arg0, int arg1, BigDecimal arg2) {
-		// TODO Auto-generated method stub
-		return false;
+		return SpExecutor.ExecuteInsertVehicle(arg0, arg1, arg2);
 	}
 
 }

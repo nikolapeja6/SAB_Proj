@@ -4,37 +4,33 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import operations.CourierOperations;
+import student.helper.SpExecutor;
 
 public class pn140041_CourierOperations implements CourierOperations {
 
 	@Override
 	public boolean deleteCourier(String arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return SpExecutor.ExecuteDeleteCourier(arg0);
 	}
 
 	@Override
 	public List<String> getAllCouriers() {
-		// TODO Auto-generated method stub
-		return null;
+		return SpExecutor.ExecuteGetAllCouriers();
 	}
 
 	@Override
 	public BigDecimal getAverageCourierProfit(int arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return SpExecutor.ExecuteGetAverageCourierProfit(arg0);
 	}
 
 	@Override
 	public List<String> getCouriersWithStatus(int arg0) {
-		// TODO Auto-generated method stub
-		return null;
+		return SpExecutor.ExecuteGetCouriersWithStatus(arg0);
 	}
 
 	@Override
 	public boolean insertCourier(String arg0, String arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return SpExecutor.ExecuteInserCourierRequest(arg0, arg1);
 	}
 
 }

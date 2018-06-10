@@ -4,19 +4,19 @@ GO
 
 CREATE TABLE [Admin]
 ( 
-	[IDAdmin]            integer  NOT NULL 
+	[username]           varchar(100)  NOT NULL 
 )
 go
 
 ALTER TABLE [Admin]
-	ADD CONSTRAINT [XPKAdmin] PRIMARY KEY  CLUSTERED ([IDAdmin] ASC)
+	ADD CONSTRAINT [XPKAdmin] PRIMARY KEY  CLUSTERED ([username] ASC)
 go
 
 CREATE TABLE [City]
 ( 
 	[IDCity]             integer  IDENTITY  NOT NULL ,
-	[NameCity]           varchar(20)  NOT NULL ,
-	[PostalCode]         integer  NOT NULL 
+	[NameCity]           varchar(100)  NOT NULL ,
+	[PostalCode]         varchar(100)  NOT NULL 
 )
 go
 
@@ -30,36 +30,39 @@ go
 
 CREATE TABLE [Courier]
 ( 
-	[IDCourier]          integer  NOT NULL ,
-	[Vehicle]            integer  NULL ,
 	[DeliveredPackagesCnt] integer  NOT NULL 
 	CONSTRAINT [Default_Courier_PackageCnt_1983182672]
 		 DEFAULT  0,
-	[Profit]             decimal(10,3)  NOT NULL ,
+	[Profit]             decimal(10,3)  NOT NULL 
+	CONSTRAINT [Default_Courier_Profit_1586259163]
+		 DEFAULT  0,
 	[Status]             bit  NOT NULL 
+	CONSTRAINT [Default_Courier_Status_1604019690]
+		 DEFAULT  0,
+	[username]           varchar(100)  NOT NULL ,
+	[LicencePlate]       varchar(40)  NULL 
 )
 go
 
 ALTER TABLE [Courier]
-	ADD CONSTRAINT [XPKCourier] PRIMARY KEY  CLUSTERED ([IDCourier] ASC)
+	ADD CONSTRAINT [XPKCourier] PRIMARY KEY  CLUSTERED ([username] ASC)
 go
 
 CREATE TABLE [CourierRequest]
 ( 
-	[IDCourierRequest]   integer  IDENTITY  NOT NULL ,
-	[IDUser]             integer  NOT NULL ,
-	[IDVehicle]          integer  NOT NULL 
+	[username]           varchar(100)  NOT NULL ,
+	[LicencePlate]       varchar(40)  NOT NULL 
 )
 go
 
 ALTER TABLE [CourierRequest]
-	ADD CONSTRAINT [XPKCourierRequest] PRIMARY KEY  CLUSTERED ([IDCourierRequest] ASC)
+	ADD CONSTRAINT [XPKCourierRequest] PRIMARY KEY  CLUSTERED ([username] ASC)
 go
 
 CREATE TABLE [District]
 ( 
 	[IDDistrict]         integer  IDENTITY  NOT NULL ,
-	[NameDistrict]       varchar(20)  NOT NULL ,
+	[NameDistrict]       varchar(100)  NOT NULL ,
 	[x]                  decimal(10,3)  NOT NULL ,
 	[y]                  decimal(10,3)  NOT NULL ,
 	[IDCity]             integer  NOT NULL 
@@ -73,17 +76,16 @@ go
 CREATE TABLE [Package]
 ( 
 	[IDPackage]          integer  IDENTITY  NOT NULL ,
-	[IDSender]           integer  NULL ,
 	[Departure]          integer  NOT NULL ,
 	[Arrival]            integer  NOT NULL ,
 	[PackageType]        tinyint  NOT NULL ,
 	[Weight]             decimal(10,3)  NOT NULL ,
-	[IDCourier]          integer  NULL ,
-	[Status]             bit  NOT NULL 
+	[Status]             smallint  NOT NULL 
 	CONSTRAINT [Default_Package_Status_966352575]
 		 DEFAULT  0,
-	[Price]              integer  NOT NULL ,
-	[AcceptanceTime]     datetime  NOT NULL 
+	[Price]              integer  NULL ,
+	[AcceptanceTime]     datetime  NULL ,
+	[username]           varchar(100)  NULL 
 )
 go
 
@@ -94,9 +96,9 @@ go
 CREATE TABLE [TransportOffer]
 ( 
 	[IDTransportOffer]   integer  IDENTITY  NOT NULL ,
-	[IDCourier]          integer  NOT NULL ,
 	[Percentage]         decimal(10,3)  NOT NULL ,
-	[IDRequest]          integer  NOT NULL 
+	[IDRequest]          integer  NOT NULL ,
+	[username]           varchar(100)  NOT NULL 
 )
 go
 
@@ -106,11 +108,10 @@ go
 
 CREATE TABLE [User]
 ( 
-	[IDUser]             integer  IDENTITY  NOT NULL ,
-	[FirstName]          varchar(20)  NOT NULL ,
-	[LastName]           varchar(20)  NOT NULL ,
-	[username]           varchar(20)  NOT NULL ,
-	[password]           varchar(20)  NOT NULL ,
+	[FirstName]          varchar(100)  NOT NULL ,
+	[LastName]           varchar(100)  NOT NULL ,
+	[username]           varchar(100)  NOT NULL ,
+	[password]           varchar(100)  NOT NULL ,
 	[SentPackageCnt]     integer  NOT NULL 
 	CONSTRAINT [Default_User_PackageCnt_297401158]
 		 DEFAULT  0
@@ -118,7 +119,7 @@ CREATE TABLE [User]
 go
 
 ALTER TABLE [User]
-	ADD CONSTRAINT [XPKUser] PRIMARY KEY  CLUSTERED ([IDUser] ASC)
+	ADD CONSTRAINT [XPKUser] PRIMARY KEY  CLUSTERED ([username] ASC)
 go
 
 ALTER TABLE [User]
@@ -127,7 +128,6 @@ go
 
 CREATE TABLE [Vehicle]
 ( 
-	[IDVehicle]          integer  IDENTITY  NOT NULL ,
 	[LicencePlate]       varchar(40)  NOT NULL ,
 	[FuelType]           tinyint  NOT NULL ,
 	[FuelConsumption]    decimal(10,3)  NOT NULL 
@@ -135,7 +135,7 @@ CREATE TABLE [Vehicle]
 go
 
 ALTER TABLE [Vehicle]
-	ADD CONSTRAINT [XPKVehicle] PRIMARY KEY  CLUSTERED ([IDVehicle] ASC)
+	ADD CONSTRAINT [XPKVehicle] PRIMARY KEY  CLUSTERED ([LicencePlate] ASC)
 go
 
 ALTER TABLE [Vehicle]
@@ -144,33 +144,33 @@ go
 
 
 ALTER TABLE [Admin]
-	ADD CONSTRAINT [R_11] FOREIGN KEY ([IDAdmin]) REFERENCES [User]([IDUser])
+	ADD CONSTRAINT [R_11] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE CASCADE
 		ON UPDATE NO ACTION
 go
 
 
 ALTER TABLE [Courier]
-	ADD CONSTRAINT [R_28] FOREIGN KEY ([IDCourier]) REFERENCES [User]([IDUser])
+	ADD CONSTRAINT [R_28] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE CASCADE
 		ON UPDATE NO ACTION
 go
 
 ALTER TABLE [Courier]
-	ADD CONSTRAINT [R_29] FOREIGN KEY ([Vehicle]) REFERENCES [Vehicle]([IDVehicle])
+	ADD CONSTRAINT [R_29] FOREIGN KEY ([LicencePlate]) REFERENCES [Vehicle]([LicencePlate])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
 
 
 ALTER TABLE [CourierRequest]
-	ADD CONSTRAINT [R_14] FOREIGN KEY ([IDUser]) REFERENCES [User]([IDUser])
+	ADD CONSTRAINT [R_14] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
 
 ALTER TABLE [CourierRequest]
-	ADD CONSTRAINT [R_15] FOREIGN KEY ([IDVehicle]) REFERENCES [Vehicle]([IDVehicle])
+	ADD CONSTRAINT [R_15] FOREIGN KEY ([LicencePlate]) REFERENCES [Vehicle]([LicencePlate])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
@@ -184,7 +184,7 @@ go
 
 
 ALTER TABLE [Package]
-	ADD CONSTRAINT [R_30] FOREIGN KEY ([IDSender]) REFERENCES [User]([IDUser])
+	ADD CONSTRAINT [R_30] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
@@ -202,14 +202,14 @@ ALTER TABLE [Package]
 go
 
 ALTER TABLE [Package]
-	ADD CONSTRAINT [R_36] FOREIGN KEY ([IDCourier]) REFERENCES [Courier]([IDCourier])
+	ADD CONSTRAINT [R_36] FOREIGN KEY ([username]) REFERENCES [Courier]([username])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
 
 
 ALTER TABLE [TransportOffer]
-	ADD CONSTRAINT [R_34] FOREIGN KEY ([IDCourier]) REFERENCES [Courier]([IDCourier])
+	ADD CONSTRAINT [R_34] FOREIGN KEY ([username]) REFERENCES [Courier]([username])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
