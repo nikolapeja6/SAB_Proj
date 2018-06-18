@@ -10,6 +10,8 @@ public class pn140041_CourierOperations implements CourierOperations {
 
 	@Override
 	public boolean deleteCourier(String arg0) {
+		if(arg0 == null || arg0.isEmpty())
+			return false;
 		return SpExecutor.ExecuteDeleteCourier(arg0);
 	}
 
@@ -30,7 +32,7 @@ public class pn140041_CourierOperations implements CourierOperations {
 
 	@Override
 	public boolean insertCourier(String arg0, String arg1) {
-		return SpExecutor.ExecuteInserCourierRequest(arg0, arg1);
+		return SpExecutor.ExecuteInsertCourier(arg0, arg1);
 	}
 
 }

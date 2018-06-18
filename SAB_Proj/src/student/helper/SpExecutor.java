@@ -1,6 +1,7 @@
 package student.helper;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -203,6 +204,7 @@ public class SpExecutor {
 		String message = (String) returnValues.get(3);
 		if (message != null && !message.isEmpty()) {
 			Logger.Log(message);
+			return null;
 		}
 
 		return splitStringIntoIds(agregatedIds);
@@ -399,6 +401,7 @@ public class SpExecutor {
 		String message = (String) returnValues.get(4);
 		if (!ret || (message != null && !message.isEmpty())) {
 			Logger.Log(message);
+			ret = false;
 		}
 
 		return ret;
@@ -458,6 +461,7 @@ public class SpExecutor {
 
 		String message = (String) returnValues.get(3);
 		if (!ret || (message != null && !message.isEmpty())) {
+			ret = false;
 			Logger.Log(message);
 		}
 
@@ -701,6 +705,7 @@ public class SpExecutor {
 
 		String message = (String) returnValues.get(3);
 		if (ret == null || !ret || (message != null && !message.isEmpty())) {
+			ret = false;
 			Logger.Log(message);
 		}
 
@@ -721,6 +726,7 @@ public class SpExecutor {
 
 		String message = (String) returnValues.get(4);
 		if (ret == null || !ret || (message != null && !message.isEmpty())) {
+			ret = false;
 			Logger.Log(message);
 		}
 
@@ -741,6 +747,7 @@ public class SpExecutor {
 
 		String message = (String) returnValues.get(4);
 		if (ret == null || !ret || (message != null && !message.isEmpty())) {
+			ret = false;
 			Logger.Log(message);
 		}
 
@@ -779,7 +786,7 @@ public class SpExecutor {
 		BigDecimal ret = new BigDecimal((Double) returnValues.get(2));
 
 		String message = (String) returnValues.get(3);
-		if (ret == null || (message != null && !message.isEmpty())) {
+		if (ret == null || ret.toBigInteger().compareTo(BigInteger.valueOf(-1)) == 0 ||  (message != null && !message.isEmpty())) {
 			ret = null;
 			Logger.Log(message);
 		}
@@ -794,10 +801,10 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static Date ExecuteGetPackageAcceptanceDate(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAcceptanceTime", packageId, OutputParameters.Date, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAcceptanceTime", packageId, OutputParameters.DateTime, OutputParameters.String);
 
 		Date  ret = (Date) returnValues.get(2);
-
+		
 		String message = (String) returnValues.get(3);
 		if (ret == null || (message != null && !message.isEmpty())) {
 			ret = null;
@@ -814,7 +821,7 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static List<Integer> ExecuteGetAllPackagesWithType(int packageType){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllPackagesWithType", packageType, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllPackagesWithType", packageType, OutputParameters.String, OutputParameters.String);
 
 		String agregatedIds = (String)returnValues.get(2);
 		
@@ -861,7 +868,6 @@ public class SpExecutor {
 
 		String message = (String) returnValues.get(3);
 		if (ret == null || (message != null && !message.isEmpty())) {
-			ret = null;
 			Logger.Log(message);
 		}
 
@@ -943,7 +949,8 @@ public class SpExecutor {
 		String(java.sql.Types.VARCHAR),
 		Double(java.sql.Types.DOUBLE),
 		Boolean(java.sql.Types.BOOLEAN),
-		Date(java.sql.Types.DATE);
+		Date(java.sql.Types.DATE),
+		DateTime(java.sql.Types.TIMESTAMP);
 
 		private final int code;
 
@@ -1040,6 +1047,10 @@ public class SpExecutor {
 
 		// Extract output parameters.
 		HashMap<Integer, Object> outputParameters = new HashMap<>();
+		
+		if(pstmt == null || parameters == null)
+			return outputParameters;
+		
 		try {
 			for (int i = 0; i < parameters.length;) {
 				Object obj = parameters[i++];
@@ -1061,6 +1072,10 @@ public class SpExecutor {
 						break;
 					case Date:
 						outputParameters.put(i, pstmt.getDate(i));
+						break;
+					case DateTime:
+						Time time = pstmt.getTime(i);
+						outputParameters.put(i, (time != null ? new Date(time.getTime()): null));
 						break;
 					default:
 						throw new UnknownError("Unkwnown type");

@@ -618,6 +618,7 @@ BEGIN
 	IF @username IS NULL OR @username = ''
 	BEGIN
 		SET @message = '@username is null or empty.'
+		SET @ret = 2
 		GOTO error_handling
 	END
 
@@ -742,7 +743,8 @@ BEGIN
 
 	IF @fuelType <> @propane AND @fuelType <> @diesel AND @fuelType <> @naturalGas
 	BEGIN
-		EXEC xp_sprintf @message OUTPUT, 'FuelType = %d is neighter propane(%d), diesel(%d) nor naturl_gas(%d).', @fuelType, @propane, @diesel, @naturalGas
+		--EXEC xp_sprintf @message OUTPUT, 'FuelType = %d is neighter propane(%d), diesel(%d) nor naturl_gas(%d).', @fuelType, @propane, @diesel, @naturalGas
+		SET @message = 'Invalid @fuelType'
 		GOTO error_handling
 	END
 
@@ -849,6 +851,12 @@ BEGIN
 		GOTO error_handling
 	END
 
+	IF @fuelType IS NULL OR @fuelType < 0
+	BEGIN
+		SET @message = '@fuelType is null or invalid.'
+		GOTO error_handling
+	END
+
 	-- check if licence plate exists
 	IF NOT EXISTS (SELECT * FROM [Vehicle] WHERE LicencePlate = @licence)
 	BEGIN
@@ -867,7 +875,8 @@ BEGIN
 
 	IF @fuelType <> @propane AND @fuelType <> @diesel AND @fuelType <> @naturalGas
 	BEGIN
-		EXEC xp_sprintf @message OUTPUT, 'FuelType = %d is neighter propane(%d), diesel(%d) nor naturl_gas(%d).', @fuelType, @propane, @diesel, @naturalGas
+		--EXEC xp_sprintf @message OUTPUT, 'FuelType = %s is neighter propane(%s), diesel(%s) nor naturl_gas(%s).', CAST(@fuelType AS text), CAST(@propane AS varchar(max)), CAST(@diesel AS varchar(max)), CAST(@naturalGas AS varchar(max))
+		SET @message = 'Invalid value of @fuelType'
 		GOTO error_handling
 	END
 
@@ -996,6 +1005,13 @@ BEGIN
 		GOTO error_handling
 	END
 
+	-- check if user is already a courier
+	IF EXISTS (SELECT * FROM [Courier] WHERE username = @username)
+	BEGIN
+		SET @message = 'User with username = ' + @username + ' is already a courier.'
+		GOTO error_handling
+	END
+
 	-- insert
 	INSERT INTO [CourierRequest](username, LicencePlate) VALUES(@username, @licencePlate)
 
@@ -1033,7 +1049,7 @@ BEGIN
 	END
 
 	-- check if request exists
-	IF NOT EXISTS (SELECT * FROM [CourierRequests] WHERE username = @username)
+	IF NOT EXISTS (SELECT * FROM [CourierRequest] WHERE username = @username)
 	BEGIN
 		SET @message = 'Request for user with username = ' + @username + ' was not submitted.'
 		GOTO error_handling
@@ -1092,7 +1108,7 @@ BEGIN
 	END
 
 	-- check if request exists
-	IF NOT EXISTS (SELECT * FROM [CourierRequests] WHERE username = @username)
+	IF NOT EXISTS (SELECT * FROM [CourierRequest] WHERE username = @username)
 	BEGIN
 		SET @message = 'Request for user with username = ' + @username + ' was not submitted.'
 		GOTO error_handling
@@ -1174,13 +1190,6 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Vehicle] WHERE LicencePlate = @licencePlate)
 	BEGIN
 		SET @message = 'Vehicle with licence_place =' + @licencePlate + ' does not exist.'
-		GOTO error_handling
-	END
-
-	-- check if courier with same licence plate exists
-	IF EXISTS (SELECT * FROM [Courier] WHERE LicencePlate = @licencePlate)
-	BEGIN
-		SET @message = 'Courier with vehicel with licence plate =' + @licencePlate + ' already exists.'
 		GOTO error_handling
 	END
 
@@ -1306,14 +1315,6 @@ BEGIN
 		SET @message = 'Courier with username = ' + @username + ' already exist.'
 		GOTO error_handling
 	END
-
-	-- see if courier with same vehicle exists
-	IF EXISTS (SELECT * FROM [Courier] WHERE LicencePlate = @licencePlate)
-	BEGIN
-		SET @message = 'Courier with vehicle licence plate = ' + @licencePlate + ' already exist.'
-		GOTO error_handling
-	END
-
 
 	-- insert
 	INSERT INTO [Courier](username, LicencePlate) VALUES(@username, @licencePlate)
@@ -1540,7 +1541,8 @@ BEGIN
 	
 	IF @packageType <> @letter AND @packageType <> @standard AND @packageType <> @fragile
 	BEGIN
-		EXEC xp_sprintf @message OUTPUT, 'PackageType = %d is neighter letter(%d), standard(%d) nor fragile(%d).', @packageType, @letter, @standard, @fragile
+		--EXEC xp_sprintf @message OUTPUT, 'PackageType = %d is neighter letter(%d), standard(%d) nor fragile(%d).', @packageType, @letter, @standard, @fragile
+		SET @message = 'Invalid @packageType'
 		GOTO error_handling
 	END 
 
@@ -1550,7 +1552,7 @@ BEGIN
 	SET @price = 0
 
 	-- insert new package
-	INSERT INTO  [Package]([Departure], [Arrival], [PackageType], [Weight], [Price]) VALUES (@districtFrom, @districtTo, @packageType, @weight, 0)
+	INSERT INTO  [Package]([Departure], [Arrival], [PackageType], [Weight], [Price], [username]) VALUES (@districtFrom, @districtTo, @packageType, @weight, 0, @username)
 
 	-- fetch id
 	SELECT @id = MAX(IDPackage) FROM [Package]
@@ -1562,6 +1564,11 @@ BEGIN
 	UPDATE [Package]
 	SET Price = @price
 	WHERE IDPackage = @id
+
+	-- update users sent packages cnt
+	UPDATE [User]
+	SET SentPackageCnt = SentPackageCnt + 1
+	WHERE username = @username
 
 	-- return
 	RETURN 
@@ -1681,8 +1688,9 @@ BEGIN
 	DECLARE @packageId int
 	DECLARE @notAcceptedStatus int
 	DECLARE @username varchar(100)
+	DECLARE @percent int
 
-	SELECT @packageId = IDRequest, @username = username FROM [TransportOffer] WHERE IDTransportOffer = @offerId
+	SELECT @packageId = IDRequest, @username = username, @percent = [Percentage] FROM [TransportOffer] WHERE IDTransportOffer = @offerId
 	SET @notAcceptedStatus = 0
 
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] = @notAcceptedStatus)
@@ -1696,13 +1704,8 @@ BEGIN
 	SELECT @current = GETDATE()
 	
 	UPDATE [Package]
-	SET username = @username, AcceptanceTime = @current, [Status] = 1
+	SET courier = @username, AcceptanceTime = @current, [Status] = 1, [Percent] = @percent
 	WHERE IDPackage = @packageId
-
-	-- delete all other offers
-	DELETE FROM [TransportOffer]
-	WHERE IDRequest = @packageId AND username <> @username
-
 
 	-- return
 	SET @ret = 1
@@ -1724,7 +1727,7 @@ CREATE PROC spGetAllOffers
 AS
 BEGIN
 	IF EXISTS (SELECT * FROM [TransportOffer])
-		SELECT @ret = COALESCE(@ret + ',','') + IDTransportOffer FROM [TransportOffer]
+		SELECT @ret = COALESCE(@ret + ',','') + dbo.fIntToVarchar(IDTransportOffer) FROM [TransportOffer]
 	ELSE
 		SET @ret = ''
 
@@ -1740,7 +1743,7 @@ CREATE PROC spGetAllOffersForPackage
 AS
 BEGIN
 	IF EXISTS (SELECT * FROM [TransportOffer] WHERE IDRequest = @packageId)
-		SELECT @ret = COALESCE(@ret + ',','') + '(' + IDTransportOffer + ',' + [Percentage] + ')' FROM [TransportOffer] WHERE IDRequest = @packageId
+		SELECT @ret = COALESCE(@ret + ',','') + '(' + dbo.fIntToVarchar(IDTransportOffer) + ',' + CAST([Percentage] AS varchar(max)) + ')' FROM [TransportOffer] WHERE IDRequest = @packageId
 	ELSE
 		SET @ret = ''
 
@@ -1772,7 +1775,7 @@ BEGIN
 	-- check if package exists
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
-		SET @message = 'Package with id = ' + @packageId + ' does not exist.'
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
 		GOTO error_handling
 	END
 
@@ -1815,7 +1818,7 @@ BEGIN
 		GOTO error_handling
 	END
 
-	IF @weight IS NULL OR @weight < 0
+	IF @weight IS NULL OR @weight <= 0
 	BEGIN
 		SET @message = '@weight is null or invalid.'
 		GOTO error_handling
@@ -1824,7 +1827,7 @@ BEGIN
 	-- check if package exists
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
-		SET @message = 'Package with id = ' + @packageId + ' does not exist.'
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
 		GOTO error_handling
 	END
 
@@ -1884,7 +1887,7 @@ BEGIN
 	-- check if package exists
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
-		SET @message = 'Package with id = ' + @packageId + ' does not exist.'
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
 		GOTO error_handling
 	END
 
@@ -1980,7 +1983,7 @@ BEGIN
 	-- check if package exists
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
-		SET @message = 'Package with id = ' + @packageId + ' does not exist.'
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
 		GOTO error_handling
 	END
 
@@ -1997,7 +2000,7 @@ BEGIN
 	-- print message and return
 	error_handling:
 		
-		SET @price = -1
+		SET @price = NULL
 		print @message
 		RETURN
 
@@ -2026,7 +2029,7 @@ BEGIN
 	-- check if package exists
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
-		SET @message = 'Package with id = ' + @packageId + ' does not exist.'
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
 		GOTO error_handling
 	END
 
@@ -2069,7 +2072,7 @@ BEGIN
 
 
 	IF EXISTS (SELECT * FROM [Package] WHERE PackageType = @type)
-		SELECT @ret = COALESCE(@ret + ',','') + IDPackage FROM [Package] WHERE PackageType = @type
+		SELECT @ret = COALESCE(@ret + ',','') + dbo.fIntToVarchar(IDPackage) FROM [Package] WHERE PackageType = @type
 	ELSE
 		SET @ret = ''
 
@@ -2092,7 +2095,7 @@ AS
 BEGIN
 	
 	IF EXISTS (SELECT * FROM [Package])
-		SELECT @ret = COALESCE(@ret + ',','') + IDPackage FROM [Package] 
+		SELECT @ret = COALESCE(@ret + ',','') + dbo.fIntToVarchar(IDPackage) FROM [Package] 
 	ELSE
 		SET @ret = ''
 
@@ -2185,8 +2188,8 @@ BEGIN
 
 	DECLARE @progress_cnt int
 	SELECT @progress_cnt = COUNT([Package].IDPackage) 
-	FROM [Package] INNER JOIN [TransportOffer] ON [Package].IDPackage = [TransportOffer].IDRequest
-	WHERE [TransportOffer].username = @username AND [Package].[Status] = @progress
+	FROM [Package]
+	WHERE courier = @username AND [Status] = @progress
 
 	IF @progress_cnt IS NULL OR @progress_cnt = 0
 	BEGIN
@@ -2194,8 +2197,16 @@ BEGIN
 		-- check if a new delivery can be started 
 		DECLARE @accepted_cnt int
 		SELECT @accepted_cnt = COUNT([Package].IDPackage)
-		FROM [Package] INNER JOIN [TransportOffer] ON [Package].IDPackage = [TransportOffer].IDRequest
-		WHERE [TransportOffer].username = @username AND [Package].[Status] = @accepted
+		FROM [Package]
+		WHERE courier = @username AND [Status] = @accepted
+
+		DECLARE @licencePlate varchar(max)
+		SELECT @licencePlate = LicencePlate FROM [Courier] WHERE username = @username
+
+		DECLARE @cntSameVehicle int
+		SELECT @cntSameVehicle = COUNT(username)
+		FROM [Courier]
+		WHERE LicencePlate = @licencePlate AND Status = 1
 
 		IF @accepted_cnt IS NULL OR @accepted_cnt = 0
 		BEGIN
@@ -2205,12 +2216,23 @@ BEGIN
 			RETURN
 		END
 
+		IF @cntSameVehicle >= 1
+		BEGIN
+			SET @message = 'Some other courier is currently driving the vehicle, so courier cannot start his drive.'
+			GOTO error_handling
+		END
+
 		-- start a new drive
 
 		-- update status or accepted packages to in_progress 
 		UPDATE [Package]
 		SET [Status] = @progress
-		WHERE [Status] = @accepted AND IDPackage in (SELECT IDRequest FROM [TransportOffer] WHERE username = @username)
+		WHERE [Status] = @accepted AND courier = @username
+
+		-- set courier status to driving
+		UPDATE [Courier]
+		SET [Status] = 1
+		WHERE username = @username
 
 	END
 
@@ -2219,7 +2241,7 @@ BEGIN
 
 	SELECT TOP(1) @id = IDPackage 
 	FROM [Package] 
-	WHERE username = @username AND [Status] = @progress
+	WHERE courier = @username AND [Status] = @progress
 	ORDER BY AcceptanceTime ASC
 
 	-- update status of that package
@@ -2234,13 +2256,18 @@ BEGIN
 
 	-- see if there are any more left
 	SELECT @progress_cnt = COUNT(IDPackage) 
-	FROM [Package] INNER JOIN [TransportOffer] ON [Package].IDPackage = [TransportOffer].IDRequest
-	WHERE [TransportOffer].username = @username AND [Package].[Status] = @progress
+	FROM [Package]
+	WHERE courier = @username AND [Status] = @progress
 
 	IF @progress_cnt IS NULL OR @progress_cnt = 0
 	BEGIN
 		-- no more packages in this dirve
 		-- calculate profit
+		-- change status of courier
+
+		UPDATE [Courier]
+		SET [Status] = 0
+		WHERE username = @username
 
 		DECLARE @profit decimal(38,8)
 		SET @profit = 0
@@ -2253,8 +2280,8 @@ BEGIN
 		DECLARE @fuelType int
 
 		SELECT @fuelType = [Vehicle].FuelType, @fuelConsumption = [Vehicle].FuelConsumption
-		FROM [TransportOffer] INNER JOIN [Courier] ON [TransportOffer].username = [Courier].username INNER JOIN [Vehicle] ON [Vehicle].LicencePlate = [Courier].LicencePlate
-		WHERE [TransportOffer].username = @username 
+		FROM [Courier] INNER JOIN [Vehicle] ON [Vehicle].LicencePlate = [Courier].LicencePlate
+		WHERE [Courier].username = @username 
 
 		SELECT @fuelPrice = 
 		CASE 
@@ -2275,9 +2302,9 @@ BEGIN
 
 		DECLARE @curs CURSOR
 		SET @curs = CURSOR FOR 
-		SELECT [TransportOffer].[Percentage] AS Perc, [Package].Price AS Pprice, [Package].Departure AS idFrom, [Package].Arrival AS IdTo
-		FROM [Package] INNER JOIN [TransportOffer] ON [Package].IDPackage = [TransportOffer].IDRequest
-		WHERE [TransportOffer].username = @username AND [Package].[Status] = @delivered
+		SELECT [Percent] AS Perc, Price AS Pprice, Departure AS idFrom, Arrival AS IdTo
+		FROM [Package]
+		WHERE courier = @username AND [Status] = @delivered AND [PayedFor] = 0
 
 		OPEN @curs
 
@@ -2314,9 +2341,10 @@ BEGIN
 		WHERE username = @username
 
 
-		-- delete all completed offers
-		DELETE FROM [TransportOffer]
-		WHERE username = @username AND EXISTS (SELECT * FROM [Package] WHERE IDPackage = IDRequest AND [Status] = 3)
+		-- update package payed for status
+		UPDATE [Package]
+		SET [PayedFor] = 1
+		WHERE courier = @username AND [Status] = 3 
 
 	END
 

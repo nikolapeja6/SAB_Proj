@@ -9,11 +9,15 @@ public class pn140041_CourierRequestOperation implements CourierRequestOperation
 
 	@Override
 	public boolean changeVehicleInCourierRequest(String arg0, String arg1) {
+		if(arg0 == null || arg1 == null || arg0.isEmpty() || arg1.isEmpty())
+			return false;
 		return SpExecutor.ExecuteChangeVehicleInCourierRequest(arg0, arg1);
 	}
 
 	@Override
 	public boolean deleteCourierRequest(String arg0) {
+		if(arg0 == null || arg0.isEmpty())
+			return false;
 		return SpExecutor.ExecuteDeleteCourierRequest(arg0);
 	}
 
@@ -24,6 +28,8 @@ public class pn140041_CourierRequestOperation implements CourierRequestOperation
 
 	@Override
 	public boolean grantRequest(String arg0) {
+		if(arg0 == null || arg0.isEmpty())
+			return false;
 		return SpExecutor.ExecuteGrantCourierRequest(arg0);
 	}
 
