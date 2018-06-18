@@ -22,6 +22,8 @@ public class pn140041_PackageOperations implements PackageOperations {
 
 	@Override
 	public boolean changeWeight(int arg0, BigDecimal arg1) {
+		if(arg1 == null)
+			return false;
 		return SpExecutor.ExecuteChangePackageWeight(arg0, arg1);
 	}
 
@@ -32,6 +34,8 @@ public class pn140041_PackageOperations implements PackageOperations {
 
 	@Override
 	public int driveNextPackage(String arg0) {
+		if(arg0 == null || arg0.isEmpty())
+			return -2;
 		return SpExecutor.ExecuteDriveNextPackage(arg0);
 	}
 

@@ -85,7 +85,12 @@ CREATE TABLE [Package]
 		 DEFAULT  0,
 	[Price]              integer  NULL ,
 	[AcceptanceTime]     datetime  NULL ,
-	[username]           varchar(100)  NULL 
+	[courier]            varchar(100)  NULL ,
+	[username]           varchar(100)  NULL ,
+	[Percent]            decimal(10,3)  NULL ,
+	[PayedFor]           bit  NULL 
+	CONSTRAINT [Default_Value_584_332525879]
+		 DEFAULT  0
 )
 go
 
@@ -145,28 +150,23 @@ go
 
 ALTER TABLE [Admin]
 	ADD CONSTRAINT [R_11] FOREIGN KEY ([username]) REFERENCES [User]([username])
-		ON DELETE CASCADE
-		ON UPDATE NO ACTION
 go
 
 
 ALTER TABLE [Courier]
 	ADD CONSTRAINT [R_28] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE CASCADE
-		ON UPDATE NO ACTION
 go
 
 ALTER TABLE [Courier]
 	ADD CONSTRAINT [R_29] FOREIGN KEY ([LicencePlate]) REFERENCES [Vehicle]([LicencePlate])
 		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
 go
 
 
 ALTER TABLE [CourierRequest]
 	ADD CONSTRAINT [R_14] FOREIGN KEY ([username]) REFERENCES [User]([username])
 		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
 go
 
 ALTER TABLE [CourierRequest]
@@ -179,7 +179,6 @@ go
 ALTER TABLE [District]
 	ADD CONSTRAINT [R_10] FOREIGN KEY ([IDCity]) REFERENCES [City]([IDCity])
 		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
 go
 
 
@@ -202,7 +201,7 @@ ALTER TABLE [Package]
 go
 
 ALTER TABLE [Package]
-	ADD CONSTRAINT [R_36] FOREIGN KEY ([username]) REFERENCES [Courier]([username])
+	ADD CONSTRAINT [R_36] FOREIGN KEY ([courier]) REFERENCES [Courier]([username])
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
@@ -210,12 +209,10 @@ go
 
 ALTER TABLE [TransportOffer]
 	ADD CONSTRAINT [R_34] FOREIGN KEY ([username]) REFERENCES [Courier]([username])
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
+		ON DELETE CASCADE
 go
 
 ALTER TABLE [TransportOffer]
 	ADD CONSTRAINT [R_35] FOREIGN KEY ([IDRequest]) REFERENCES [Package]([IDPackage])
-		ON DELETE NO ACTION
-		ON UPDATE NO ACTION
+		ON DELETE CASCADE
 go

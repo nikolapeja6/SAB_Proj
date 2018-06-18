@@ -34,3 +34,6 @@ RemoteSystemsTempFiles*
 !*.erwin
 !*.png
 SAB_Proj/log.txt
+
+# include jars
+!*.jar
