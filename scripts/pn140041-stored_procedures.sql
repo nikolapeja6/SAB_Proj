@@ -880,6 +880,13 @@ BEGIN
 		GOTO error_handling
 	END
 
+	-- check is vehicle is in use
+	IF EXISTS (SELECT * FROM [Courier] WHERE LicencePlate = @licence AND [Status] = 1)
+	BEGIN
+		SET @message = 'Cannot change vehicle fuel type as it is currently in use by courier'
+		GOTO error_handling
+	END
+
 	-- update
 	UPDATE [Vehicle]
 	SET FuelType = @fuelType
@@ -930,6 +937,13 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Vehicle] WHERE LicencePlate = @licence)
 	BEGIN
 		SET @message = 'Vehicle with licence plate = '+@licence + ' does not exists.'
+		GOTO error_handling
+	END
+
+	-- check is vehicle is in use
+	IF EXISTS (SELECT * FROM [Courier] WHERE LicencePlate = @licence AND [Status] = 1)
+	BEGIN
+		SET @message = 'Cannot change vehicle fuel type as it is currently in use by courier'
 		GOTO error_handling
 	END
 
@@ -1006,11 +1020,11 @@ BEGIN
 	END
 
 	-- check if user is already a courier
-	IF EXISTS (SELECT * FROM [Courier] WHERE username = @username)
-	BEGIN
-		SET @message = 'User with username = ' + @username + ' is already a courier.'
-		GOTO error_handling
-	END
+	--IF EXISTS (SELECT * FROM [Courier] WHERE username = @username)
+	--BEGIN
+	--	SET @message = 'User with username = ' + @username + ' is already a courier.'
+	--	GOTO error_handling
+	--END
 
 	-- insert
 	INSERT INTO [CourierRequest](username, LicencePlate) VALUES(@username, @licencePlate)
@@ -1247,6 +1261,13 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Courier] WHERE username = @username)
 	BEGIN
 		SET @message = 'Courier with username = ' + @username + 'does not exist.'
+		GOTO error_handling
+	END
+
+	-- see if courier is driving
+	IF EXISTS (SELECT * FROM [Courier] WHERE username = @username AND [Status] = 1)
+	BEGIN
+		SET @message = 'Courier is currently driving and cannot be deleted.'
 		GOTO error_handling
 	END
 
@@ -1565,11 +1586,6 @@ BEGIN
 	SET Price = @price
 	WHERE IDPackage = @id
 
-	-- update users sent packages cnt
-	UPDATE [User]
-	SET SentPackageCnt = SentPackageCnt + 1
-	WHERE username = @username
-
 	-- return
 	RETURN 
 
@@ -1689,9 +1705,12 @@ BEGIN
 	DECLARE @notAcceptedStatus int
 	DECLARE @username varchar(100)
 	DECLARE @percent int
+	DECLARE @sender_username varchar(100)
 
 	SELECT @packageId = IDRequest, @username = username, @percent = [Percentage] FROM [TransportOffer] WHERE IDTransportOffer = @offerId
 	SET @notAcceptedStatus = 0
+
+	SELECT @sender_username = username FROM [Package] WHERE IDPackage = @packageId
 
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] = @notAcceptedStatus)
 	BEGIN
@@ -1706,6 +1725,10 @@ BEGIN
 	UPDATE [Package]
 	SET courier = @username, AcceptanceTime = @current, [Status] = 1, [Percent] = @percent
 	WHERE IDPackage = @packageId
+
+	UPDATE [User]
+	SET SentPackageCnt = SentPackageCnt + 1
+	WHERE username = @sender_username
 
 	-- return
 	SET @ret = 1
@@ -1779,6 +1802,13 @@ BEGIN
 		GOTO error_handling
 	END
 
+	-- check if package is accepted
+	IF EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] <> 0)
+	BEGIN
+		SET @message = 'An offer for the package with id = ' + dbo.fIntToVarchar(@packageId) + ' has been accepted.'
+		GOTO error_handling
+	END
+
 	-- delete from package
 	DELETE FROM [Package] WHERE IDPackage = @packageId
 
@@ -1828,6 +1858,13 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
 		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
+		GOTO error_handling
+	END
+
+	-- check if package has been accepted
+	IF EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] <> 0)
+	BEGIN
+		SET @message = 'An offer for the package with id = ' + dbo.fIntToVarchar(@packageId) + ' has already been accepted.'
 		GOTO error_handling
 	END
 
@@ -1888,6 +1925,13 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
 		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
+		GOTO error_handling
+	END
+
+	-- check if package has been accepted
+	IF EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] <> 0)
+	BEGIN
+		SET @message = 'An offer for the package with id = ' + dbo.fIntToVarchar(@packageId) + ' has already been accepted.'
 		GOTO error_handling
 	END
 
@@ -1984,6 +2028,13 @@ BEGIN
 	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId)
 	BEGIN
 		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not exist.'
+		GOTO error_handling
+	END
+
+	-- check if package has accepted offer
+	IF NOT EXISTS (SELECT * FROM [Package] WHERE IDPackage = @packageId AND [Status] <> 0)
+	BEGIN
+		SET @message = 'Package with id = ' + dbo.fIntToVarchar(@packageId) + ' does not have an offer.'
 		GOTO error_handling
 	END
 

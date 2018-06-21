@@ -251,10 +251,13 @@ public class CourierRequestOperationTest extends UnitTestBase {
 		checkStd();
 	}
 	
+	/**
+	 * Apparently, this is allowed.
+	 */
 	@Test 
 	public void testInsertCourierRequestForExistingCourier(){	
 		assertTrue(courierOps.insertCourier(username1, licencePlate1));
-		assertFalse(courierRequestOps.insertCourierRequest(username1, licencePlate2));
+		assertTrue(courierRequestOps.insertCourierRequest(username1, licencePlate2));
 		
 		checkStd();
 	}

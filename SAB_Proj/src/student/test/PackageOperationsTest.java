@@ -513,8 +513,10 @@ public class PackageOperationsTest extends UnitTestBase {
 		for (int type = 0; type < 3; type++) {
 			for (int i = 0; i < weights.length; i++) {
 				idPackage = packageOps.insertPackage(districtId1, districtId2, username1, type, weights[i]);
+				BigDecimal percent = BigDecimal.valueOf(1);
+				packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, idPackage, percent));
 				actualPrice = packageOps.getPriceOfDelivery(idPackage);
-				expectedPrice = getPackagePrice(type, weights[i], distance12, BigDecimal.ZERO);
+				expectedPrice = getPackagePrice(type, weights[i], distance12, percent);
 
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) <= 0);
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) >= 0);
@@ -524,8 +526,10 @@ public class PackageOperationsTest extends UnitTestBase {
 		for (int type = 0; type < 3; type++) {
 			for (int i = 0; i < weights.length; i++) {
 				idPackage = packageOps.insertPackage(districtId1, districtId3, username1, type, weights[i]);
+				BigDecimal percent = BigDecimal.valueOf(2);
+				packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, idPackage, percent));
 				actualPrice = packageOps.getPriceOfDelivery(idPackage);
-				expectedPrice = getPackagePrice(type, weights[i], distance13, BigDecimal.ZERO);
+				expectedPrice = getPackagePrice(type, weights[i], distance13, percent);
 
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) <= 0);
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) >= 0);
@@ -535,8 +539,10 @@ public class PackageOperationsTest extends UnitTestBase {
 		for (int type = 0; type < 3; type++) {
 			for (int i = 0; i < weights.length; i++) {
 				idPackage = packageOps.insertPackage(districtId2, districtId3, username1, type, weights[i]);
+				BigDecimal percent = BigDecimal.valueOf(5);
+				packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, idPackage, percent));
 				actualPrice = packageOps.getPriceOfDelivery(idPackage);
-				expectedPrice = getPackagePrice(type, weights[i], distance23, BigDecimal.ZERO);
+				expectedPrice = getPackagePrice(type, weights[i], distance23, percent);
 
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) <= 0);
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) >= 0);
@@ -546,8 +552,10 @@ public class PackageOperationsTest extends UnitTestBase {
 		for (int type = 0; type < 3; type++) {
 			for (int i = 0; i < weights.length; i++) {
 				idPackage = packageOps.insertPackage(districtId1, districtId1, username1, type, weights[i]);
+				BigDecimal percent = BigDecimal.valueOf(10);
+				packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, idPackage, percent));
 				actualPrice = packageOps.getPriceOfDelivery(idPackage);
-				expectedPrice = getPackagePrice(type, weights[i], 0, BigDecimal.ZERO);
+				expectedPrice = getPackagePrice(type, weights[i], 0, percent);
 
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) <= 0);
 				assertTrue(actualPrice.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) >= 0);
