@@ -17,12 +17,12 @@ public class pn140041_PackageOperations implements PackageOperations {
 
 	@Override
 	public boolean changeType(int arg0, int arg1) {
-		return SpExecutor.ExecuteChangePackageType(arg0,  arg1);
+		return SpExecutor.ExecuteChangePackageType(arg0, arg1);
 	}
 
 	@Override
 	public boolean changeWeight(int arg0, BigDecimal arg1) {
-		if(arg1 == null)
+		if (arg1 == null)
 			return false;
 		return SpExecutor.ExecuteChangePackageWeight(arg0, arg1);
 	}
@@ -34,7 +34,7 @@ public class pn140041_PackageOperations implements PackageOperations {
 
 	@Override
 	public int driveNextPackage(String arg0) {
-		if(arg0 == null || arg0.isEmpty())
+		if (arg0 == null || arg0.isEmpty())
 			return -2;
 		return SpExecutor.ExecuteDriveNextPackage(arg0);
 	}
@@ -88,12 +88,12 @@ public class pn140041_PackageOperations implements PackageOperations {
 	public int insertTransportOffer(String arg0, int arg1, BigDecimal arg2) {
 		return SpExecutor.ExecuteInsertTransportOffer(arg0, arg1, arg2);
 	}
-	
-	public static class PackagePair<A,B> implements Pair<A, B> {
+
+	public static class PackagePair<A, B> implements Pair<A, B> {
 
 		private A firstParam;
 		private B secondParam;
-		
+
 		@Override
 		public A getFirstParam() {
 			return firstParam;
@@ -103,8 +103,8 @@ public class pn140041_PackageOperations implements PackageOperations {
 		public B getSecondParam() {
 			return secondParam;
 		}
-		
-		public PackagePair(A integer, B bigDecimal){
+
+		public PackagePair(A integer, B bigDecimal) {
 			firstParam = integer;
 			secondParam = bigDecimal;
 		}

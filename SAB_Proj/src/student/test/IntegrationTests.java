@@ -61,13 +61,13 @@ public class IntegrationTests extends UnitTestBase {
 		distance13 = PackageOperationsTest.euclidean(0, 0, 7, 13);
 		distance23 = PackageOperationsTest.euclidean(10, 0, 7, 13);
 	}
-	
+
 	@Test
 	public void testGetSentPackages() {
 		int packageId1;
 		int packageId2;
 		int packageId3;
-		
+
 		assertEquals(0, userOps.getSentPackages(username1).intValue());
 		assertEquals(0, userOps.getSentPackages(username2).intValue());
 
@@ -75,78 +75,73 @@ public class IntegrationTests extends UnitTestBase {
 		assertNotEquals(-1, packageId1);
 		assertEquals(0, userOps.getSentPackages(username1).intValue());
 		assertEquals(0, userOps.getSentPackages(username2).intValue());
-		
+
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, packageId1, BigDecimal.ZERO)));
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(0, userOps.getSentPackages(username2).intValue());
-		
+
 		assertEquals(packageId1, packageOps.driveNextPackage(username1));
 		assertEquals(-1, packageOps.driveNextPackage(username1));
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(0, userOps.getSentPackages(username2).intValue());
-		
-		
-		
+
 		packageId2 = packageOps.insertPackage(districtId1, districtId1, username2, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId2);
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(0, userOps.getSentPackages(username2).intValue());
-		
+
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username2, packageId2, BigDecimal.ZERO)));
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(1, userOps.getSentPackages(username2).intValue());
-		
+
 		assertEquals(packageId2, packageOps.driveNextPackage(username2));
 		assertEquals(-1, packageOps.driveNextPackage(username1));
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(1, userOps.getSentPackages(username2).intValue());
-		
-		
-		
+
 		packageId3 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId3);
 		assertEquals(1, userOps.getSentPackages(username1).intValue());
 		assertEquals(1, userOps.getSentPackages(username2).intValue());
-		
+
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username2, packageId3, BigDecimal.ZERO)));
 		assertEquals(2, userOps.getSentPackages(username1).intValue());
 		assertEquals(1, userOps.getSentPackages(username2).intValue());
-		
+
 		assertEquals(packageId3, packageOps.driveNextPackage(username2));
 		assertEquals(-1, packageOps.driveNextPackage(username1));
 		assertEquals(2, userOps.getSentPackages(username1).intValue());
 		assertEquals(1, userOps.getSentPackages(username2).intValue());
-		
-		
+
 		checkStd();
 
 	}
-	
+
 	@Test
-	public void testGetCourierWithStatus(){
+	public void testGetCourierWithStatus() {
 		List<String> result = null;
 		int packageId1;
 		int packageId2;
 		int packageId3;
-		
+
 		result = courierOps.getCouriersWithStatus(0);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(username1));
 		assertTrue(result.contains(username2));
 		result = courierOps.getCouriersWithStatus(1);
 		assertEquals(0, result.size());
-		
+
 		packageId1 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId1);
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, packageId1, BigDecimal.ZERO)));
-	
+
 		result = courierOps.getCouriersWithStatus(0);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(username1));
 		assertTrue(result.contains(username2));
 		result = courierOps.getCouriersWithStatus(1);
 		assertEquals(0, result.size());
-		
+
 		assertEquals(packageId1, packageOps.driveNextPackage(username1));
 		result = courierOps.getCouriersWithStatus(0);
 		assertEquals(2, result.size());
@@ -154,7 +149,7 @@ public class IntegrationTests extends UnitTestBase {
 		assertTrue(result.contains(username2));
 		result = courierOps.getCouriersWithStatus(1);
 		assertEquals(0, result.size());
-		
+
 		packageId2 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		packageId3 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId2);
@@ -168,7 +163,7 @@ public class IntegrationTests extends UnitTestBase {
 		assertTrue(result.contains(username2));
 		result = courierOps.getCouriersWithStatus(1);
 		assertEquals(0, result.size());
-		
+
 		assertEquals(packageId2, packageOps.driveNextPackage(username1));
 		result = courierOps.getCouriersWithStatus(0);
 		assertEquals(1, result.size());
@@ -177,7 +172,7 @@ public class IntegrationTests extends UnitTestBase {
 		result = courierOps.getCouriersWithStatus(1);
 		assertEquals(1, result.size());
 		assertTrue(result.contains(username1));
-		
+
 		assertEquals(packageId3, packageOps.driveNextPackage(username1));
 		result = courierOps.getCouriersWithStatus(0);
 		assertEquals(2, result.size());
@@ -188,26 +183,26 @@ public class IntegrationTests extends UnitTestBase {
 
 		checkStd();
 	}
-	
+
 	@Test
-	public void testCourierConfiltVehicle(){
+	public void testCourierConfiltVehicle() {
 		List<String> result = null;
 		int packageId1;
 		int packageId2;
 		int packageId3;
-		
+
 		packageId1 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId1);
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, packageId1, BigDecimal.ZERO)));
-	
+
 		packageId2 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId1);
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username1, packageId2, BigDecimal.ZERO)));
-	
+
 		packageId3 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		assertNotEquals(-1, packageId1);
 		assertTrue(packageOps.acceptAnOffer(packageOps.insertTransportOffer(username2, packageId3, BigDecimal.ZERO)));
-	
+
 		assertEquals(packageId1, packageOps.driveNextPackage(username1));
 		assertEquals(-2, packageOps.driveNextPackage(username2));
 		assertEquals(packageId2, packageOps.driveNextPackage(username1));
@@ -215,7 +210,7 @@ public class IntegrationTests extends UnitTestBase {
 
 		checkStd();
 	}
-	
+
 	private static void checkStd() {
 		List<String> users = userOps.getAllUsers();
 

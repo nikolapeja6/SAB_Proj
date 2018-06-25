@@ -228,63 +228,63 @@ public class UserOperationTest extends UnitTestBase {
 		assertEquals(5, userOps.deleteUsers(username + 0, username + 1, username + 2, username + 3, username + 4,
 				username + 5, username + 6));
 	}
-	
+
 	@Test
 	public void testGetAllUsersSingle() {
 		String username = "username";
 		String firstName = "Name";
 		String secondName = "Surname";
 		String password = "password123";
-		
+
 		List<String> result = null;
-		
+
 		assertTrue(userOps.insertUser(username, firstName, secondName, password));
-		
+
 		result = userOps.getAllUsers();
 		assertEquals(1, result.size());
 		assertTrue(result.contains(username));
-		
+
 		assertEquals(1, userOps.deleteUsers(username));
-		
+
 		result = userOps.getAllUsers();
 		assertEquals(0, result.size());
 		assertFalse(result.contains(username));
 	}
-	
+
 	@Test
 	public void testGetAllUsersMultiple1() {
 		String username = "username";
 		String firstName = "Name";
 		String secondName = "Surname";
 		String password = "password123";
-		
+
 		List<String> result = null;
-		
+
 		result = userOps.getAllUsers();
 		assertEquals(0, result.size());
-		
-		for(int i =0; i < 5; i++){
-		assertTrue(userOps.insertUser(username+i, firstName+i, secondName+i, password+i));
-		
-		result = userOps.getAllUsers();
-		assertEquals(i+1, result.size());
-		assertTrue(result.contains(username+i));
+
+		for (int i = 0; i < 5; i++) {
+			assertTrue(userOps.insertUser(username + i, firstName + i, secondName + i, password + i));
+
+			result = userOps.getAllUsers();
+			assertEquals(i + 1, result.size());
+			assertTrue(result.contains(username + i));
 		}
-		
+
 		result = userOps.getAllUsers();
 		assertEquals(5, result.size());
 		assertFalse(result.contains(username));
-		
-		for(int i =4; i >= 0; i--){
+
+		for (int i = 4; i >= 0; i--) {
 			result = userOps.getAllUsers();
-			assertEquals(i+1, result.size());
-			assertTrue(result.contains(username+i));
-			assertEquals(1, userOps.deleteUsers(username+i));
+			assertEquals(i + 1, result.size());
+			assertTrue(result.contains(username + i));
+			assertEquals(1, userOps.deleteUsers(username + i));
 			result = userOps.getAllUsers();
 			assertEquals(i, result.size());
-			assertFalse(result.contains(username+i));
+			assertFalse(result.contains(username + i));
 		}
-		
+
 		result = userOps.getAllUsers();
 		assertEquals(0, result.size());
 	}

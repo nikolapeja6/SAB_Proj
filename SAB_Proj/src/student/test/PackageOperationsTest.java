@@ -567,16 +567,16 @@ public class PackageOperationsTest extends UnitTestBase {
 
 	@Test
 	public void testGetAllPackagesWithType() {
-		
+
 		int id1 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
 		int id2 = packageOps.insertPackage(districtId1, districtId1, username1, 0, BigDecimal.ONE);
-		
+
 		int id3 = packageOps.insertPackage(districtId1, districtId1, username1, 1, BigDecimal.ONE);
 		int id4 = packageOps.insertPackage(districtId1, districtId1, username1, 1, BigDecimal.ONE);
 
 		int id5 = packageOps.insertPackage(districtId1, districtId1, username1, 2, BigDecimal.ONE);
 		int id6 = packageOps.insertPackage(districtId1, districtId1, username1, 2, BigDecimal.ONE);
-		
+
 		assertNotEquals(-1, id1);
 		assertNotEquals(-1, id2);
 		assertNotEquals(-1, id3);
@@ -585,31 +585,31 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertNotEquals(-1, id6);
 
 		List<Integer> result = null;
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(0);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(id1));
 		assertTrue(result.contains(id2));
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(1);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(id3));
 		assertTrue(result.contains(id4));
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(2);
 		assertEquals(2, result.size());
 		assertTrue(result.contains(id5));
 		assertTrue(result.contains(id6));
-		
+
 		assertTrue(packageOps.changeType(id1, 1));
 		assertTrue(packageOps.changeType(id2, 2));
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(1);
 		assertEquals(3, result.size());
 		assertTrue(result.contains(id3));
 		assertTrue(result.contains(id4));
 		assertTrue(result.contains(id1));
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(2);
 		assertEquals(3, result.size());
 		assertTrue(result.contains(id5));
@@ -619,13 +619,13 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertTrue(packageOps.changeType(id1, 2));
 		assertTrue(packageOps.changeType(id3, 2));
 		assertTrue(packageOps.changeType(id4, 2));
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(0);
 		assertEquals(0, result.size());
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(1);
 		assertEquals(0, result.size());
-		
+
 		result = packageOps.getAllPackagesWithSpecificType(2);
 		assertEquals(6, result.size());
 		assertTrue(result.contains(id1));
@@ -635,10 +635,9 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertTrue(result.contains(id5));
 		assertTrue(result.contains(id6));
 
-		
 		checkStd();
 	}
-	
+
 	@Test
 	public void testGetDriveEmpty() {
 		List<Integer> result = null;
@@ -671,16 +670,16 @@ public class PackageOperationsTest extends UnitTestBase {
 
 		checkStd();
 	}
-	
+
 	@Test
 	public void testDriving() {
 		List<Integer> result = null;
-		
+
 		int idPackage1;
 		int idPackage2;
 		int idPackage3;
 		int idPackage4;
-		
+
 		int idOffer1;
 		int idOffer2;
 		int idOffer3;
@@ -690,12 +689,12 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertEquals(0, result.size());
 		result = packageOps.getDrive(username2);
 		assertEquals(0, result.size());
-		
+
 		idPackage1 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage2 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage3 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage4 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
-		
+
 		assertNotEquals(-1, idPackage1);
 		assertNotEquals(-1, idPackage2);
 		assertNotEquals(-1, idPackage3);
@@ -705,11 +704,11 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage2).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage3).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage4).intValue());
-		
+
 		idOffer1 = packageOps.insertTransportOffer(username1, idPackage1, BigDecimal.ONE);
 		idOffer2 = packageOps.insertTransportOffer(username2, idPackage3, BigDecimal.ONE);
 		idOffer3 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);
-		idOffer4 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);	
+		idOffer4 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);
 
 		result = packageOps.getDrive(username1);
 		assertEquals(0, result.size());
@@ -720,12 +719,12 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertNotEquals(-1, idOffer2);
 		assertNotEquals(-1, idOffer3);
 		assertNotEquals(-1, idOffer4);
-		
+
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage1).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage2).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage3).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage4).intValue());
-		
+
 		assertTrue(packageOps.acceptAnOffer(idOffer1));
 		try {
 			Thread.sleep(500);
@@ -735,12 +734,11 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertTrue(packageOps.acceptAnOffer(idOffer3));
 		assertTrue(packageOps.acceptAnOffer(idOffer2));
 
-		
 		assertEquals(1, packageOps.getDeliveryStatus(idPackage1).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage2).intValue());
 		assertEquals(1, packageOps.getDeliveryStatus(idPackage3).intValue());
 		assertEquals(1, packageOps.getDeliveryStatus(idPackage4).intValue());
-		
+
 		result = packageOps.getDrive(username1);
 		assertEquals(0, result.size());
 		assertEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
@@ -756,12 +754,12 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertTrue(result.contains(idPackage4));
 		result = packageOps.getDrive(username2);
 		assertEquals(0, result.size());
-		
+
 		assertEquals(3, packageOps.getDeliveryStatus(idPackage1).intValue());
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage2).intValue());
 		assertEquals(3, packageOps.getDeliveryStatus(idPackage3).intValue());
 		assertEquals(2, packageOps.getDeliveryStatus(idPackage4).intValue());
-		
+
 		assertEquals(-1, packageOps.driveNextPackage(username2));
 		assertEquals(idPackage4, packageOps.driveNextPackage(username1));
 		assertNotEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
@@ -774,7 +772,7 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertEquals(0, packageOps.getDeliveryStatus(idPackage2).intValue());
 		assertEquals(3, packageOps.getDeliveryStatus(idPackage3).intValue());
 		assertEquals(3, packageOps.getDeliveryStatus(idPackage4).intValue());
-		
+
 		assertEquals(-1, packageOps.driveNextPackage(username2));
 		assertEquals(-1, packageOps.driveNextPackage(username1));
 		assertNotEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
@@ -782,99 +780,97 @@ public class PackageOperationsTest extends UnitTestBase {
 		assertEquals(0, result.size());
 		result = packageOps.getDrive(username2);
 		assertEquals(0, result.size());
-		
-		
+
 		checkStd();
 	}
-	
+
 	@Test
 	public void testProfit() {
 		int idPackage1;
 		int idPackage2;
 		int idPackage3;
 		int idPackage4;
-		
+
 		int idOffer1;
 		int idOffer2;
 		int idOffer3;
 		int idOffer4;
-		
+
 		assertEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
-		
+
 		idPackage1 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage2 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage3 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
 		idPackage4 = packageOps.insertPackage(districtId1, districtId2, username1, 0, BigDecimal.ONE);
-		
+
 		assertNotEquals(-1, idPackage1);
 		assertNotEquals(-1, idPackage2);
 		assertNotEquals(-1, idPackage3);
 		assertNotEquals(-1, idPackage4);
-		
+
 		assertEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
-		
+
 		idOffer1 = packageOps.insertTransportOffer(username1, idPackage1, BigDecimal.ONE);
 		idOffer2 = packageOps.insertTransportOffer(username2, idPackage3, BigDecimal.ONE);
 		idOffer3 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);
-		idOffer4 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);	
-		
+		idOffer4 = packageOps.insertTransportOffer(username1, idPackage4, BigDecimal.ONE);
+
 		assertEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
-		
+
 		assertNotEquals(-1, idOffer1);
 		assertNotEquals(-1, idOffer2);
 		assertNotEquals(-1, idOffer3);
 		assertNotEquals(-1, idOffer4);
-		
+
 		assertTrue(packageOps.acceptAnOffer(idOffer1));
-		
+
 		assertEquals(BigDecimal.ZERO, courierOps.getAverageCourierProfit(0));
 
 		assertEquals(idPackage1, packageOps.driveNextPackage(username1));
-		
+
 		BigDecimal courierProfit = courierOps.getAverageCourierProfit(1);
 		BigDecimal expectedPrice = getPackagePrice(0, BigDecimal.ONE, distance12, BigDecimal.ONE);
 		expectedPrice = expectedPrice.subtract(new BigDecimal(distance12 * 15.0D).multiply(BigDecimal.ONE));
-		
+
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) >= 0);
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) <= 0);
-		
+
 		courierProfit = courierOps.getAverageCourierProfit(0);
 		expectedPrice = expectedPrice.divide(BigDecimal.valueOf(2));
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) >= 0);
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) <= 0);
 
 		assertEquals(-1, packageOps.driveNextPackage(username1));
-		
+
 		courierProfit = courierOps.getAverageCourierProfit(1);
 		expectedPrice = getPackagePrice(0, BigDecimal.ONE, distance12, BigDecimal.ONE);
 		expectedPrice = expectedPrice.subtract(new BigDecimal(distance12 * 15.0D).multiply(BigDecimal.ONE));
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) >= 0);
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) <= 0);
-		
+
 		assertTrue(packageOps.acceptAnOffer(idOffer2));
-		
+
 		assertEquals(idPackage3, packageOps.driveNextPackage(username2));
-		
+
 		courierProfit = courierOps.getAverageCourierProfit(1);
 		expectedPrice = getPackagePrice(0, BigDecimal.ONE, distance12, BigDecimal.ONE);
 		expectedPrice = expectedPrice.subtract(new BigDecimal(distance12 * 15.0D).multiply(BigDecimal.ONE));
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) >= 0);
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) <= 0);
-		
+
 		assertTrue(packageOps.acceptAnOffer(idOffer3));
-		
+
 		assertEquals(idPackage4, packageOps.driveNextPackage(username1));
-		
+
 		courierProfit = courierOps.getAverageCourierProfit(1);
 		expectedPrice = getPackagePrice(0, BigDecimal.ONE, distance12, BigDecimal.ONE);
 		expectedPrice = expectedPrice.subtract(new BigDecimal(distance12 * 15.0D).multiply(BigDecimal.ONE));
 		expectedPrice = expectedPrice.multiply(BigDecimal.valueOf(3)).divide(BigDecimal.valueOf(2));
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(1.05D))) >= 0);
 		assertTrue(courierProfit.compareTo(expectedPrice.multiply(new BigDecimal(0.95D))) <= 0);
-		
+
 		checkStd();
 	}
-	
 
 	private static void checkStd() {
 		List<String> users = userOps.getAllUsers();

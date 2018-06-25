@@ -8,16 +8,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ 
-		CityOperationsTest.class,
-		CourierOperationTest.class,
-		CourierRequestOperationTest.class,
-		DistrictOperationTest.class,
-		PackageOperationsTest.class,
-		UserOperationTest.class,
-		VehicleOperationTest.class,
-		IntegrationTests.class
-	})
+@SuiteClasses({ CityOperationsTest.class, CourierOperationTest.class, CourierRequestOperationTest.class,
+		DistrictOperationTest.class, PackageOperationsTest.class, UserOperationTest.class, VehicleOperationTest.class,
+		IntegrationTests.class })
 public class AllTests {
-	
+
 }

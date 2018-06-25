@@ -5,18 +5,18 @@ import java.util.List;
 import operations.CityOperations;
 import student.helper.SpExecutor;
 
-public class pn140041_CityOperations implements CityOperations{
+public class pn140041_CityOperations implements CityOperations {
 
 	@Override
 	public int deleteCity(String... arg0) {
-		
+
 		// Success count.
 		int cnt = 0;
-		
-		for(String cityName : arg0)
-			if(SpExecutor.ExecuteDeleteCity(cityName) != -1)
+
+		for (String cityName : arg0)
+			if (SpExecutor.ExecuteDeleteCity(cityName) != -1)
 				cnt++;
-		
+
 		return cnt;
 	}
 

@@ -20,8 +20,8 @@ public class pn140041_DistrictOperations implements DistrictOperations {
 	@Override
 	public int deleteDistricts(String... arg0) {
 		int cnt = 0;
-		for(String districtName : arg0)
-			if(SpExecutor.ExecuteDeleteDistrictName(districtName))
+		for (String districtName : arg0)
+			if (SpExecutor.ExecuteDeleteDistrictName(districtName))
 				cnt++;
 		return cnt;
 	}

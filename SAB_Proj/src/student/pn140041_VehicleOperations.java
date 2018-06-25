@@ -21,8 +21,8 @@ public class pn140041_VehicleOperations implements VehicleOperations {
 	@Override
 	public int deleteVehicles(String... arg0) {
 		int cnt = 0;
-		for(String licence : arg0)
-			if(SpExecutor.ExecuteDeleteVehicle(licence))
+		for (String licence : arg0)
+			if (SpExecutor.ExecuteDeleteVehicle(licence))
 				cnt++;
 		return cnt;
 	}
