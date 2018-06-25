@@ -11,8 +11,6 @@ public abstract class UnitTestBase {
 	
 	private static pn140041_GeneralOperations generalOps = new pn140041_GeneralOperations();
 
-
-	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}

@@ -427,7 +427,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spInsertCourierRequest stored procedure.
 	 * 
@@ -436,7 +436,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteInserCourierRequest(String username, String licencePlate) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertCourierRequest", username, licencePlate, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertCourierRequest", username, licencePlate,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(3);
 
@@ -447,7 +448,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spDeleteCourierRequest stored procedure.
 	 * 
@@ -455,7 +456,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteDeleteCourierRequest(String username) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteCourierRequest", username, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteCourierRequest", username,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(2);
 
@@ -467,7 +469,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spChangeVehicleInCourierRequest stored procedure.
 	 * 
@@ -476,7 +478,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteChangeVehicleInCourierRequest(String username, String licencePlate) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangeVehicleInCourierRequest", username, licencePlate, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangeVehicleInCourierRequest", username,
+				licencePlate, OutputParameters.Boolean, OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(3);
 
@@ -487,7 +490,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetAllCourierRequests stored procedure.
 	 * 
@@ -499,7 +502,7 @@ public class SpExecutor {
 		String agregatedUsernames = (String) returnValues.get(1);
 		return splitStringIntoStrings(agregatedUsernames);
 	}
-	
+
 	/**
 	 * Executed the spGrantCourierRequest stored procedure.
 	 * 
@@ -507,7 +510,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteGrantCourierRequest(String username) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGrantCourierRequest", username, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGrantCourierRequest", username,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(2);
 
@@ -518,7 +522,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spInsertCourier stored procedure.
 	 * 
@@ -527,7 +531,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteInsertCourier(String username, String licencePlate) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertCourier", username, licencePlate, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertCourier", username, licencePlate,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(3);
 
@@ -538,7 +543,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spDeleteCourier stored procedure.
 	 * 
@@ -546,7 +551,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteDeleteCourier(String username) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteCourier", username, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeleteCourier", username, OutputParameters.Boolean,
+				OutputParameters.String);
 
 		boolean ret = (Boolean) returnValues.get(2);
 
@@ -557,7 +563,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetCouriersWithStatus stored procedure.
 	 * 
@@ -565,13 +571,14 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static List<String> ExecuteGetCouriersWithStatus(int status) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetCouriersWithStatus", status, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetCouriersWithStatus", status,
+				OutputParameters.String);
 
 		String agregatedUsernames = (String) returnValues.get(2);
-		
+
 		return splitStringIntoStrings(agregatedUsernames);
 	}
-	
+
 	/**
 	 * Executed the spGetAllCouriers stored procedure.
 	 * 
@@ -582,10 +589,10 @@ public class SpExecutor {
 		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllCouriers", OutputParameters.String);
 
 		String agregatedUsernames = (String) returnValues.get(1);
-		
+
 		return splitStringIntoStrings(agregatedUsernames);
 	}
-	
+
 	/**
 	 * Executed the spGetAverageCourierProfit stored procedure.
 	 * 
@@ -593,13 +600,14 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static BigDecimal ExecuteGetAverageCourierProfit(int numberOfDeliveries) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAverageCourierProfit", numberOfDeliveries, OutputParameters.Double);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAverageCourierProfit", numberOfDeliveries,
+				OutputParameters.Double);
 
 		double ret = (Double) returnValues.get(2);
-		
+
 		return new BigDecimal(ret);
 	}
-	
+
 	/**
 	 * Executed the spInsertPackage stored procedure.
 	 * 
@@ -610,8 +618,10 @@ public class SpExecutor {
 	 * @param weight
 	 * @return
 	 */
-	public static int ExecuteInsertPackage(int districtFrom, int districtTo, String username, int packageType, BigDecimal weight) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertPackage", districtFrom, districtTo, username, packageType, weight, OutputParameters.Integer, OutputParameters.String);
+	public static int ExecuteInsertPackage(int districtFrom, int districtTo, String username, int packageType,
+			BigDecimal weight) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertPackage", districtFrom, districtTo, username,
+				packageType, weight, OutputParameters.Integer, OutputParameters.String);
 
 		Integer ret = (Integer) returnValues.get(6);
 
@@ -622,8 +632,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
-	
+
 	/**
 	 * Executed the spInsertTransportOffer stored procedure.
 	 * 
@@ -633,7 +642,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static int ExecuteInsertTransportOffer(String username, int packageId, BigDecimal percentage) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertTransportOffer", username, packageId, percentage, OutputParameters.Integer, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spInsertTransportOffer", username, packageId,
+				percentage, OutputParameters.Integer, OutputParameters.String);
 
 		Integer ret = (Integer) returnValues.get(4);
 
@@ -644,7 +654,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spAcceptOffer stored procedure.
 	 * 
@@ -652,7 +662,8 @@ public class SpExecutor {
 	 * @return
 	 */
 	public static boolean ExecuteAcceptOffer(int offerId) {
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spAcceptOffer", offerId, OutputParameters.Boolean, OutputParameters.String);
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spAcceptOffer", offerId, OutputParameters.Boolean,
+				OutputParameters.String);
 
 		Boolean ret = (Boolean) returnValues.get(2);
 
@@ -663,7 +674,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetAllOffers stored procedure.
 	 * 
@@ -674,32 +685,34 @@ public class SpExecutor {
 		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllOffers", OutputParameters.String);
 
 		String agregatedIds = (String) returnValues.get(1);
-		
+
 		return splitStringIntoIds(agregatedIds);
 	}
-	
+
 	/**
 	 * Executed the spGetAllOffersForPackage stored procedure.
 	 * 
 	 * @param packageId
 	 * @return
 	 */
-	public static List<Pair<Integer, BigDecimal>> ExecuteGetAllOffersForPackage(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllOffersForPackage", packageId, OutputParameters.String);
+	public static List<Pair<Integer, BigDecimal>> ExecuteGetAllOffersForPackage(int packageId) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllOffersForPackage", packageId,
+				OutputParameters.String);
 
 		String agredatedPairs = (String) returnValues.get(2);
-		
+
 		return splitStringIntoPackagePair(agredatedPairs);
 	}
-	
+
 	/**
 	 * Executed the spDeletePackage stored procedure.
 	 * 
 	 * @param packageId
 	 * @return
 	 */
-	public static boolean ExecuteDeletePackage(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeletePackage", packageId, OutputParameters.Boolean, OutputParameters.String);
+	public static boolean ExecuteDeletePackage(int packageId) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDeletePackage", packageId,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		Boolean ret = (Boolean) returnValues.get(2);
 
@@ -711,7 +724,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spChangePackageWeight stored procedure.
 	 * 
@@ -719,8 +732,9 @@ public class SpExecutor {
 	 * @param weight
 	 * @return
 	 */
-	public static boolean ExecuteChangePackageWeight(int packageId, BigDecimal weight){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangePackageWeight", packageId, weight, OutputParameters.Boolean, OutputParameters.String);
+	public static boolean ExecuteChangePackageWeight(int packageId, BigDecimal weight) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangePackageWeight", packageId, weight,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		Boolean ret = (Boolean) returnValues.get(3);
 
@@ -732,7 +746,7 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spChangePackageType stored procedure.
 	 * 
@@ -740,8 +754,9 @@ public class SpExecutor {
 	 * @param packageType
 	 * @return
 	 */
-	public static boolean ExecuteChangePackageType(int packageId, int packageType){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangePackageType", packageId, packageType, OutputParameters.Boolean, OutputParameters.String);
+	public static boolean ExecuteChangePackageType(int packageId, int packageType) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spChangePackageType", packageId, packageType,
+				OutputParameters.Boolean, OutputParameters.String);
 
 		Boolean ret = (Boolean) returnValues.get(3);
 
@@ -753,15 +768,16 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetDeliveryStatus stored procedure.
 	 * 
 	 * @param packageId
 	 * @return
 	 */
-	public static Integer ExecuteGetPackageDeliveryStatus(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetDeliveryStatus", packageId, OutputParameters.Integer, OutputParameters.String);
+	public static Integer ExecuteGetPackageDeliveryStatus(int packageId) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetDeliveryStatus", packageId,
+				OutputParameters.Integer, OutputParameters.String);
 
 		Integer ret = (Integer) returnValues.get(2);
 
@@ -773,38 +789,41 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetDeliveryPrice stored procedure.
 	 * 
 	 * @param packageId
 	 * @return
 	 */
-	public static BigDecimal ExecuteGetPriceOfPackageDelivery(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetDeliveryPrice", packageId, OutputParameters.Double, OutputParameters.String);
+	public static BigDecimal ExecuteGetPriceOfPackageDelivery(int packageId) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetDeliveryPrice", packageId,
+				OutputParameters.Double, OutputParameters.String);
 
 		BigDecimal ret = new BigDecimal((Double) returnValues.get(2));
 
 		String message = (String) returnValues.get(3);
-		if (ret == null || ret.toBigInteger().compareTo(BigInteger.valueOf(-1)) == 0 ||  (message != null && !message.isEmpty())) {
+		if (ret == null || ret.toBigInteger().compareTo(BigInteger.valueOf(-1)) == 0
+				|| (message != null && !message.isEmpty())) {
 			ret = null;
 			Logger.Log(message);
 		}
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetAcceptanceTime stored procedure.
 	 * 
 	 * @param packageId
 	 * @return
 	 */
-	public static Date ExecuteGetPackageAcceptanceDate(int packageId){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAcceptanceTime", packageId, OutputParameters.DateTime, OutputParameters.String);
+	public static Date ExecuteGetPackageAcceptanceDate(int packageId) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAcceptanceTime", packageId,
+				OutputParameters.DateTime, OutputParameters.String);
 
-		Date  ret = (Date) returnValues.get(2);
-		
+		Date ret = (Date) returnValues.get(2);
+
 		String message = (String) returnValues.get(3);
 		if (ret == null || (message != null && !message.isEmpty())) {
 			ret = null;
@@ -813,58 +832,59 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
+
 	/**
 	 * Executed the spGetAllPackagesWithType stored procedure.
 	 * 
 	 * @param packageType
 	 * @return
 	 */
-	public static List<Integer> ExecuteGetAllPackagesWithType(int packageType){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllPackagesWithType", packageType, OutputParameters.String, OutputParameters.String);
+	public static List<Integer> ExecuteGetAllPackagesWithType(int packageType) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllPackagesWithType", packageType,
+				OutputParameters.String, OutputParameters.String);
 
-		String agregatedIds = (String)returnValues.get(2);
-		
+		String agregatedIds = (String) returnValues.get(2);
+
 		return splitStringIntoIds(agregatedIds);
 	}
-	
+
 	/**
 	 * Executed the spGetAllPackages stored procedure.
 	 * 
 	 * @return
 	 */
-	public static List<Integer> ExecuteGetAllPackages(){
+	public static List<Integer> ExecuteGetAllPackages() {
 		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetAllPackages", OutputParameters.String);
 
-		String agregatedIds = (String)returnValues.get(1);
-		
+		String agregatedIds = (String) returnValues.get(1);
+
 		return splitStringIntoIds(agregatedIds);
 	}
-	
+
 	/**
 	 * Executed the spGetDrive stored procedure.
 	 * 
 	 * @return
 	 */
-	public static List<Integer> ExecuteGetDrive(String username){
+	public static List<Integer> ExecuteGetDrive(String username) {
 		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spGetDrive", username, OutputParameters.String);
 
-		String agregatedIds = (String)returnValues.get(2);
-		
+		String agregatedIds = (String) returnValues.get(2);
+
 		return splitStringIntoIds(agregatedIds);
 	}
-	
-	
+
 	/**
 	 * Executed the spDriveNextPackage stored procedure.
 	 * 
 	 * @param username
 	 * @return
 	 */
-	public static int ExecuteDriveNextPackage(String username){
-		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDriveNextPackage", username, OutputParameters.Integer, OutputParameters.String);
-		
-		Integer  ret = (Integer) returnValues.get(2);
+	public static int ExecuteDriveNextPackage(String username) {
+		HashMap<Integer, Object> returnValues = ExecuteStoredProc("spDriveNextPackage", username,
+				OutputParameters.Integer, OutputParameters.String);
+
+		Integer ret = (Integer) returnValues.get(2);
 
 		String message = (String) returnValues.get(3);
 		if (ret == null || (message != null && !message.isEmpty())) {
@@ -873,8 +893,6 @@ public class SpExecutor {
 
 		return ret;
 	}
-	
-	
 
 	/**
 	 * Executes spEraseAll - erases all data from all tables in the database.
@@ -945,12 +963,8 @@ public class SpExecutor {
 	 *
 	 */
 	private enum OutputParameters {
-		Integer(java.sql.Types.INTEGER),
-		String(java.sql.Types.VARCHAR),
-		Double(java.sql.Types.DOUBLE),
-		Boolean(java.sql.Types.BOOLEAN),
-		Date(java.sql.Types.DATE),
-		DateTime(java.sql.Types.TIMESTAMP);
+		Integer(java.sql.Types.INTEGER), String(java.sql.Types.VARCHAR), Double(java.sql.Types.DOUBLE), Boolean(
+				java.sql.Types.BOOLEAN), Date(java.sql.Types.DATE), DateTime(java.sql.Types.TIMESTAMP);
 
 		private final int code;
 
@@ -1012,7 +1026,7 @@ public class SpExecutor {
 					pstmt.setString(i, (String) obj);
 				} else if (obj instanceof BigDecimal) {
 					// big decimal
-					BigDecimal decimalValue = (BigDecimal)obj;
+					BigDecimal decimalValue = (BigDecimal) obj;
 					pstmt.setDouble(i, decimalValue.doubleValue());
 				} else if (obj instanceof OutputParameters) {
 					// Output parameters.
@@ -1047,10 +1061,10 @@ public class SpExecutor {
 
 		// Extract output parameters.
 		HashMap<Integer, Object> outputParameters = new HashMap<>();
-		
-		if(pstmt == null || parameters == null)
+
+		if (pstmt == null || parameters == null)
 			return outputParameters;
-		
+
 		try {
 			for (int i = 0; i < parameters.length;) {
 				Object obj = parameters[i++];
@@ -1075,7 +1089,7 @@ public class SpExecutor {
 						break;
 					case DateTime:
 						Time time = pstmt.getTime(i);
-						outputParameters.put(i, (time != null ? new Date(time.getTime()): null));
+						outputParameters.put(i, (time != null ? new Date(time.getTime()) : null));
 						break;
 					default:
 						throw new UnknownError("Unkwnown type");
@@ -1128,31 +1142,31 @@ public class SpExecutor {
 
 		return strings;
 	}
-	
+
 	/**
 	 * Splits the string containing pair of values in parenthesis into a list.
 	 * 
 	 * @param agregatedString
 	 * @return
 	 */
-	private static List<Pair<Integer, BigDecimal>> splitStringIntoPackagePair(String agregatedString){
+	private static List<Pair<Integer, BigDecimal>> splitStringIntoPackagePair(String agregatedString) {
 		LinkedList<Pair<Integer, BigDecimal>> ret = new LinkedList<>();
 
 		if (agregatedString == null || agregatedString.isEmpty())
 			return ret;
 
 		Matcher pairs = Pattern.compile("\\((.*?)\\)").matcher(agregatedString);
-		while(pairs.find()) {
+		while (pairs.find()) {
 			String pair = pairs.group(1);
 			Matcher values = Pattern.compile("(?<id>.+),(?<percent>.+)").matcher(pair);
-			
+
 			values.find();
 			int integer = Integer.parseInt(values.group("id"));
 			BigDecimal bigDecimal = new BigDecimal(values.group("percent"));
-			student.pn140041_PackageOperations.PackagePair<Integer, BigDecimal> p = new student.pn140041_PackageOperations.PackagePair<Integer, BigDecimal>(integer, bigDecimal);
+			student.pn140041_PackageOperations.PackagePair<Integer, BigDecimal> p = new student.pn140041_PackageOperations.PackagePair<Integer, BigDecimal>(
+					integer, bigDecimal);
 			ret.add(p);
 		}
-
 
 		return ret;
 	}
@@ -1169,26 +1183,12 @@ public class SpExecutor {
 		System.out.println("Starting test...");
 		System.out.println();
 
-		/*
-		 * HashMap<Integer, Object> result = ExecuteStoredProc("spGetAllCities",
-		 * OutputParameters.String); Iterator it = result.entrySet().iterator();
-		 * while (it.hasNext()) { Map.Entry pair = (Map.Entry) it.next();
-		 * System.out.print(pair.getKey() + "=" + pair.getValue() + "; "); }
-		 */
 		for (int id : ExecuteGetAllCities()) {
 			System.out.print(id + ", ");
 		}
 
 		System.out.println();
 		System.out.println();
-
-		/*
-		 * result = ExecuteStoredProc("spInsertCity", "SomeCity1", "12345678",
-		 * OutputParameters.Integer, OutputParameters.String); it =
-		 * result.entrySet().iterator(); while (it.hasNext()) { Map.Entry pair =
-		 * (Map.Entry) it.next(); System.out.print(pair.getKey() + "=" +
-		 * pair.getValue() + "; "); }
-		 */
 
 		ExecuteDeleteCity("SomeCity2");
 
@@ -1203,12 +1203,6 @@ public class SpExecutor {
 		System.out.println();
 		System.out.println();
 
-		/*
-		 * result = ExecuteStoredProc("spGetAllCities",
-		 * OutputParameters.String); it = result.entrySet().iterator(); while
-		 * (it.hasNext()) { Map.Entry pair = (Map.Entry) it.next();
-		 * System.out.print(pair.getKey() + "=" + pair.getValue() + "; "); }
-		 */
 		for (int id : ExecuteGetAllCities()) {
 			System.out.print(id + ", ");
 		}

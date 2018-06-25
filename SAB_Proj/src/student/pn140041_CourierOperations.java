@@ -10,7 +10,7 @@ public class pn140041_CourierOperations implements CourierOperations {
 
 	@Override
 	public boolean deleteCourier(String arg0) {
-		if(arg0 == null || arg0.isEmpty())
+		if (arg0 == null || arg0.isEmpty())
 			return false;
 		return SpExecutor.ExecuteDeleteCourier(arg0);
 	}
