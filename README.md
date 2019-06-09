@@ -15,20 +15,24 @@ The SQL scripts are written for  Microsoft's [SQL Server][mssql], so you will ne
 ## Code structure
 
 The project consists of several parts:
-   - the project statement (in [Serbian][sr_statement] and [English][statement]), along with the javadocs for the API that the project needed to implement, is located in the ```docs``` folder.
-   - erwin database model, located in the ```erwin``` folder.
-   - T-SQL scripts for creating the database (```pre_erwin.sql```), creating the tables (generated from erwin model), creating stored procedures and triggers are all merged into a single script (```pn140041.sql```), as requested by the project statement. There is also the ```purge.sql``` script for purging the contents of the SQL Server created by the other scripts. All the scripts are located in the ```scripts``` folder.
-   - the Java eclipse project with the actual app that interacts with the database is located in the ```SAB_proj``` folder.
+- the project statement (in [Serbian][sr_statement] and [English][statement]), along with the javadocs for the API that the project needed to implement, is located in the ```docs``` folder.
+- erwin database model, located in the ```erwin``` folder.
+- T-SQL scripts for creating the database (```pre_erwin.sql```), creating the tables (generated from erwin model), creating stored procedures and triggers are all merged into a single script (```pn140041.sql```), as requested by the project statement. There is also the ```purge.sql``` script for purging the contents of the SQL Server created by the other scripts. All the scripts are located in the ```scripts``` folder.
+- the Java eclipse project with the actual app that interacts with the database is located in the ```SAB_proj``` folder.
+   
+## Database diagram
+
+Below is a diagram which shows the final version of the database (relationships between tables).
+
+![Database diagram](https://user-images.githubusercontent.com/18459277/59161123-c8569100-8ade-11e9-90fb-e1cf089cef70.png)
+
 
 [sab]: http://si4sab.etf.rs/
 [etf]: https://www.etf.bg.ac.rs/en
 [uni]: http://www.bg.ac.rs/en/
 [statement]: ./docs/SAB_homework_1718.pdf
 [erwin_site]: https://erwin.com/products/data-modeler/
-[erwin]: ./erwin
-[scripts]: ./scripts
 [mssql]: https://www.microsoft.com/en-us/sql-server
-[nikolapeja6]: https://github.com/nikolapeja6
 [jre]: https://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
 [jdk]: https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
 [eclipse]: https://www.eclipse.org/downloads/packages/
